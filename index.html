@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Stranger Things Club</title>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background-color: #0d0d0d;
+      color: #f31c1c;
+      font-family: 'Press Start 2P', monospace;
+      margin: 0;
+      padding: 0;
+    }
+    #auth-screen {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: #0d0d0d;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    }
+    #auth-screen h2 {
+      font-size: 1.5rem;
+      color: #f31c1c;
+      text-shadow: 0 0 10px #f31c1c;
+      margin-bottom: 1.5rem;
+    }
+    #auth-screen input {
+      padding: 0.5rem;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 0.75rem;
+      background: #1a1a1a;
+      color: #00ffff;
+      border: 2px solid #f31c1c;
+      outline: none;
+      text-align: center;
+    }
+    #auth-screen button {
+      margin-top: 1rem;
+      padding: 0.5rem 1rem;
+      background: #f31c1c;
+      color: #0d0d0d;
+      font-family: 'Press Start 2P', monospace;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    #auth-screen button:hover {
+      background: #ff00ff;
+      color: white;
+      transform: scale(1.05);
+    }
+    #loading {
+      margin-top: 1rem;
+      color: #00ffff;
+      font-size: 0.75rem;
+      display: none;
+    }
+    #error-message {
+      color: red;
+      font-size: 0.7rem;
+      margin-top: 0.5rem;
+      display: none;
+    }
+    header {
+      text-align: center;
+      padding: 2rem;
+      background: #1a1a1a;
+      border-bottom: 2px solid #f31c1c;
+      position: relative;
+    }
+    header h1 {
+      font-size: 1.8rem;
+      margin: 0;
+    }
+    #logout-button {
+      position: absolute;
+      top: 1.5rem;
+      right: 1.5rem;
+      background: #f31c1c;
+      color: #0d0d0d;
+      border: none;
+      padding: 0.5rem 1rem;
+      font-family: 'Press Start 2P', monospace;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    #logout-button:hover {
+      background: #ff00ff;
+      color: white;
+      transform: scale(1.05);
+    }
+    .section {
+      padding: 2rem;
+      border-bottom: 1px solid #333;
+    }
+    .section h2 {
+      font-size: 1rem;
+      color: #ff3c00;
+    }
+    a {
+      color: #00ffff;
+      text-decoration: none;
+      display: block;
+      margin: 0.5rem 0;
+      transition: all 0.3s ease;
+    }
+    a:hover {
+      color: #ff00ff;
+      transform: scale(1.05);
+      text-shadow: 0 0 5px #ff00ff;
+    }
+    .section p {
+      font-size: 0.75rem;
+    }
+  </style>
+</head>
+<body>
+  <div id="auth-screen">
+    <h2>🔐 TopSecret</h2>
+    <input type="password" id="code" placeholder="Inserisci codice..." onkeydown="if(event.key === 'Enter') unlockPortal()">
+    <button onclick="unlockPortal()">Accedi</button>
+    <div id="loading">Accesso in corso...</div>
+    <div id="error-message">Codice errato. Riprova.</div>
+  </div>
+
+  <div id="main-content" style="display: none;">
+    <header>
+      <h1>Stranger Things Club</h1>
+      <p>Condivisione segreta: <strong>redroom-net</strong></p>
+      <button id="logout-button" onclick="lockPortal()">Logout</button>
+    </header>
+
+    <div class="section">
+      <h2>🎮 Clip di giochi</h2>
+      <a href="https://www.youtube.com/@danilodolce4689/playlists" target="_blank" rel="noopener noreferrer">Playlist YouTube</a>
+      <a href="https://drive.google.com/drive/folders/1td7aZv-oCrgyvHcyftmdKZEG7Sq7mRO0?usp=sharing" target="_blank" rel="noopener noreferrer">Cartella Google Drive</a>
+    </div>
+
+    <div class="section">
+      <h2>📷 Immagini e foto</h2>
+      <a href="https://drive.google.com/drive/folders/16nQZNGsnhR8jSMFr8j8bVNc6ogjkiRj_?usp=sharing" target="_blank" rel="noopener noreferrer">Album Google Foto</a>
+    </div>
+
+    <div class="section">
+      <h2>📁 File & documenti</h2>
+      <a href="https://mega.nz/folder/09AWEBII#04O8Tq0pUlRFIgczIpOYJw" target="_blank" rel="noopener noreferrer">Cartella MEGA</a>
+    </div>
+
+    <div class="section">
+      <h2>🚀 Trasferisci file pesanti</h2>
+      <a href="https://transfer.it/start" target="_blank" rel="noopener noreferrer">Transfer Drop</a>
+    </div>
+
+    <div class="section">
+      <h2>🔗 Link rapidi</h2>
+      <a href="https://news.instant-gaming.com/it" target="_blank" rel="noopener noreferrer">Instant Gaming News</a>
+      <a href="https://www.youtube.com/@GameSprout/videos" target="_blank" rel="noopener noreferrer">YouTube - GameSprout</a>
+    </div>
+  </div>
+
+  <script>
+    function unlockPortal() {
+      const code = document.getElementById('code').value;
+      const loading = document.getElementById('loading');
+      const errorMessage = document.getElementById('error-message');
+      loading.style.display = 'block';
+      errorMessage.style.display = 'none';
+
+      setTimeout(() => {
+        if (code === '0611') {
+          document.getElementById('auth-screen').style.display = 'none';
+          document.getElementById('main-content').style.display = 'block';
+          document.getElementById('code').value = '';
+        } else {
+          errorMessage.style.display = 'block';
+        }
+        loading.style.display = 'none';
+      }, 1000);
+    }
+
+    function lockPortal() {
+      document.getElementById('main-content').style.display = 'none';
+      document.getElementById('auth-screen').style.display = 'flex';
+    }
+  </script>
+</body>
+</html>
